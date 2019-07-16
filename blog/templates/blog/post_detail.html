@@ -13,8 +13,12 @@
 		      </div>	
 		      {%endif%}
 		    </div>
-		    <h2 class="article-title">{{ object.title }}</a></h2>
-		    <p class="article-content">{{ object.content }}</p>
+		    <h2 class="article-title">{{ object.Subject }}</a></h2>
+		    <p class="article-content">{{ object.Description }}</p>
+		    <form action="{%  url 'like_post'%}" method="post">
+		    	{% csrf_token %}
+		    		<button type="submit" name="post_id" value="{{post.id}}" class="btn btn-primary">like</button>	
+		    </form>
 		  </div>
 		</article>
 {% endblock content %}

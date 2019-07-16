@@ -1,10 +1,10 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect,get_object_or_404
 from django.urls import reverse
 from .models import Post
-from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,RedirectView
 
 
 def home(request):
@@ -12,7 +12,14 @@ def home(request):
 			'posts':Post.objects.all()
 	}
 	return render(request,'blog/home.html',context)
-# Create your views here.
+# Create your views here. 
+def like_post(request):
+	post=get_object_or_404(Post,id=request.POST.get('id')) 
+	post.likes.add(request.user)
+	return HttpResponseRedirect(post.get_absolute_url())
+
+
+
 
 class PostListView(ListView):
 	model=Post
@@ -25,7 +32,7 @@ class PostDetailView(DetailView):
 
 class PostCreateView(LoginRequiredMixin,CreateView):
 	model=Post
-	fields=['title','content','file']
+	fields=['domain','Subject','Description','file']
 
 	def form_valid(self, form):
 		form.instance.author = self.request.user
